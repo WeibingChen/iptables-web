@@ -21,8 +21,10 @@ package iptables
 
 import (
 	"fmt"
-	"github.com/pretty66/iptables-web/utils"
 	"regexp"
+	"strings"
+
+	"github.com/pretty66/iptables-web/utils"
 )
 
 type SystemTitle struct {
@@ -38,17 +40,18 @@ type CustomTitle struct {
 }
 
 type Column struct {
-	Num         string `json:"num"`
-	Pkts        string `json:"pkts"`
-	Bytes       string `json:"bytes"`
-	Target      string `json:"target"`
-	Prot        string `json:"prot"`
-	Opt         string `json:"opt"`
-	In          string `json:"in"`
-	Out         string `json:"out"`
-	Source      string `json:"source"`
-	Destination string `json:"destination"`
-	Action      string `json:"action"`
+	Num         string   `json:"num"`
+	Pkts        string   `json:"pkts"`
+	Bytes       string   `json:"bytes"`
+	Target      string   `json:"target"`
+	Prot        string   `json:"prot"`
+	Opt         string   `json:"opt"`
+	In          string   `json:"in"`
+	Out         string   `json:"out"`
+	Source      string   `json:"source"`
+	Destination string   `json:"destination"`
+	Action      string   `json:"action"`
+	Comments    []string `json:"comments,omitempty"`
 }
 
 type SystemTable struct {
@@ -76,6 +79,7 @@ type TableList interface {
 var systemTitleRegex *regexp.Regexp
 var customTitleRegex *regexp.Regexp
 var columnRegex *regexp.Regexp
+var commentRegex *regexp.Regexp
 
 func init() {
 	var err error
@@ -87,7 +91,12 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	columnRegex, err = regexp.Compile(`(\d+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+([0-9\.\/]+)\s*(.*)`)
+	// columnRegex, err = regexp.Compile(`(\d+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+([0-9\.\/]+)\s*(.*)`)
+	columnRegex, err = regexp.Compile(`(\d+?)\s{1,8}(.+?)\s{1,8}(.+?)\s{1,8}(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+(.+?)\s+([!0-9\.\/]+)\s*(.*)`)
+	if err != nil {
+		panic(err)
+	}
+	commentRegex, err = regexp.Compile(`\/\*(?:[^\*]|\*+[^\/\*])*\*+\/`)
 	if err != nil {
 		panic(err)
 	}
@@ -126,6 +135,7 @@ func parseColumn(cs []string) ([]Column, error) {
 			return nil, fmt.Errorf("parse column error:%d => %v, str:%s", len(rule), rule, cs[k])
 		}
 		rule = rule[1:]
+		action, comments := parseCommnet(rule[10])
 		c := Column{
 			Num:         rule[0],
 			Pkts:        rule[1],
@@ -137,9 +147,15 @@ func parseColumn(cs []string) ([]Column, error) {
 			Out:         rule[7],
 			Source:      rule[8],
 			Destination: rule[9],
-			Action:      rule[10],
+			Action:      action,
+			Comments:    comments,
 		}
 		out = append(out, c)
 	}
 	return out, nil
+}
+
+func parseCommnet(action string) (string, []string) {
+	comments := commentRegex.FindAllString(action, -1)
+	return strings.TrimSpace(commentRegex.ReplaceAllString(action, "")), comments
 }

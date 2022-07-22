@@ -24,12 +24,14 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/pretty66/iptables-web/pkg/iptables"
-	"github.com/pretty66/iptables-web/utils"
+	"log"
 	"net/http"
 	"os"
 	"runtime"
 	"time"
+
+	"github.com/pretty66/iptables-web/pkg/iptables"
+	"github.com/pretty66/iptables-web/utils"
 )
 
 //go:embed web/index.html
@@ -92,6 +94,7 @@ func main() {
 
 func initRoute(mux *HTTPMux, ipc iptables.Iptableser) {
 	mux.Use(auth)
+	mux.Use(logger)
 	mux.HandleFunc("/version", func(w http.ResponseWriter, req *http.Request) {
 		v, err := ipc.Version()
 		utils.Output(w, err, v)
@@ -189,6 +192,13 @@ func auth(handler http.Handler) http.Handler {
 		}
 		w.Header().Set("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	})
+}
+
+func logger(hander http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.URL)
+		hander.ServeHTTP(w, r)
 	})
 }
 

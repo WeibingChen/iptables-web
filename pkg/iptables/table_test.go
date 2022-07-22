@@ -52,6 +52,16 @@ num   pkts bytes target     prot opt in     out     source               destina
 4        0     0 DNAT       tcp  --  !br-152b31f15eed *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8082 to:172.19.0.8:8082
 5        0     0 DNAT       tcp  --  !br-152b31f15eed *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8081 to:172.19.0.8:8081
 6        0     0 DNAT       tcp  --  !br-152b31f15eed *       0.0.0.0/0            0.0.0.0/0            tcp dpt:3306 to:172.19.0.9:3306
+
+Chain cali-pri-_u2Tn2rSoAPffvE7JO6 (2 references)
+num   pkts bytes target     prot opt in     out     source               destination
+1        0     0            all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:WqgznqAQ-uYV0oBx */ /* Profile ksa.kube-system.coredns ingress */
+
+Chain OUTPUT (policy ACCEPT 7105 packets, 427K bytes)
+num   pkts bytes target     prot opt in     out     source               destination
+1    2688K  161M cali-OUTPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:tVnHkvAo15HuiPy0 */
+2    2688K  161M KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+3    1128K   68M DOCKER     all  --  *      *       0.0.0.0/0           !127.0.0.0/8          ADDRTYPE match dst-type LOCAL
 `
 
 func TestParse(t *testing.T) {

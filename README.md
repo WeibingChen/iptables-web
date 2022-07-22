@@ -15,11 +15,13 @@ docker run -d \
   --name iptables-web \
   --privileged=true \
   --net=host \
+  --cap-add=NET_ADMIN \
+  --cap-add=NET_RAW \
   -e "IPT_WEB_USERNAME=admin" \
   -e "IPT_WEB_PASSWORD=admin" \
   -e "IPT_WEB_ADDRESS=:10001" \
   -p 10001:10001 \
-  pretty66/iptables-web:1.1.1 
+  sanddune/iptables-web:v1
 ```
 - `IPT_WEB_USERNAME`: 网页认证用户名，默认：admin
 - `IPT_WEB_PASSWORD`: 网页认证密码，默认：admin

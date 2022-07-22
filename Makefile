@@ -23,8 +23,8 @@ run:
 	go run main.go
 
 images:
-	docker build -t pretty66/iptables-web:1.1.1 .
-	docker push pretty66/iptables-web:1.1.1
+	docker build -t sanddune/iptables-web:v1 .
+	docker push sanddune/iptables-web:v1
 
 clean:
 	rm -f $(BIN_FILE)

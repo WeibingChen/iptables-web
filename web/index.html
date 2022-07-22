@@ -666,6 +666,7 @@
                          <th>source</th>
                          <th>destination</th>
                          <th>action</th>
+                         <th>comments</th>
                          <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                         </tr>
                     </thead>
@@ -703,6 +704,7 @@
             td += "<td>" + data.list[k].source + "</td>";
             td += "<td>" + data.list[k].destination + "</td>";
             td += "<td>" + data.list[k].action + "</td>";
+            td += "<td>" + (data.list[k].comments === undefined ? "" : data.list[k].comments) + "</td>";
             td += "<td><div class='layui-btn-group'>" +
                 "<button class='layui-btn layui-btn-xs layui-btn-primary flush-metrics' data-table='" + tableName + "' data-chain='" + data.title.chain + "' data-id='" + data.list[k].num + "'>清零</button>" +
                 " <button class='layui-btn layui-btn-xs layui-btn-primary delete-rule' data-table='" + tableName + "' data-chain='" + data.title.chain + "' data-id='" + data.list[k].num + "'>删除</button>" +

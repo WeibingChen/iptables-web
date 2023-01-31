@@ -682,11 +682,11 @@
         let title = '';
         switch (type) {
             case 'system':
-                title = "链: " + data.title.chain + " &nbsp;默认策略: " + data.title.policy + " &nbsp;经过的包数量: " + data
+                title = "链: " + '<a name="' + data.title.chain + '">' +  data.title.chain + "</a> &nbsp;默认策略: " + data.title.policy + " &nbsp;经过的包数量: " + data
                     .title.packets + " &nbsp;字节数: " + data.title.bytes
                 break;
             case 'custom':
-                title = "链: " + data.title.chain + " &nbsp;被引用数量: " + data.title.references
+                title = "链: " + '<a name="' + data.title.chain + '">' + data.title.chain + "</a> &nbsp;被引用数量: " + data.title.references
                 break;
 
         }
@@ -696,7 +696,7 @@
             td += "<td style='color: #1E9FFF;text-decoration: underline;'>" + data.list[k].num + "</td>";
             td += "<td>" + data.list[k].pkts + "</td>";
             td += "<td>" + data.list[k].bytes + "</td>";
-            td += "<td>" + data.list[k].target + "</td>";
+            td += '<td><a name="#' + data.list[k].target + '">' + data.list[k].target + "</a></td>";
             td += "<td>" + data.list[k].prot + "</td>";
             td += "<td>" + data.list[k].opt + "</td>";
             td += "<td>" + data.list[k].in + "</td>";

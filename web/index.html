@@ -691,12 +691,17 @@
 
         }
         let td = '';
+        let actions = ["ACCEPT", "REJECT", "DROP", "MARK", "RETURN", "SNAT", "DNAT", "REDIRECT", "MASQUERADE", "LOG"];
         for (k in data.list) {
             td += "<tr>";
             td += "<td style='color: #1E9FFF;text-decoration: underline;'>" + data.list[k].num + "</td>";
             td += "<td>" + data.list[k].pkts + "</td>";
             td += "<td>" + data.list[k].bytes + "</td>";
-            td += '<td><a href="#' + data.list[k].target + '">' + data.list[k].target + "</a></td>";
+            if(actions.includes(data.list[k].target)) {
+                td += "<td>" + data.list[k].target + "</td>";
+            } else {
+                td += '<td><a href="#' + data.list[k].target + '">' + data.list[k].target + "</a></td>";
+            }
             td += "<td>" + data.list[k].prot + "</td>";
             td += "<td>" + data.list[k].opt + "</td>";
             td += "<td>" + data.list[k].in + "</td>";
